@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\ClinicController;
+use App\Http\Controllers\Api\FeedbackController;
+use App\Http\Controllers\Api\HistoryController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\QuestionController;
 use App\Http\Controllers\Api\RegisterController;
@@ -30,4 +32,6 @@ Route::resources([
     'clinics' => ClinicController::class,
     'reservations' => ReservationController::class,
     'questions' => QuestionController::class,
+    'feedbacks' => FeedbackController::class,
+    'histories' => HistoryController::class,
 ]);

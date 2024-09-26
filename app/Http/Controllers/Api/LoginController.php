@@ -15,14 +15,15 @@ class LoginController extends Controller
      */
     public function __invoke(UserFormRequest $request)
     {
-        $credentials = ['email' => request('email'), 'password' => request('password')];
+        $credentials = $request->only(['email', 'password']);
+
         if (auth()->attempt($credentials)) {
-            $data = auth()->user();
-            $data['token'] = auth()->user()->createToken($data['email'])->plainTextToken;
-            return Messages::success(UserResource::make($data),'Logged in successfully');
-        }
-        else{
+            $user = auth()->user();
+            $user['token'] = $user->createToken($user->email, [$user->type])->plainTextToken;
+            return Messages::success(UserResource::make($user), 'Logged in successfully');
+        } else {
             return Messages::error('Login Failed');
         }
     }
+
 }
