@@ -2,21 +2,41 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Filter\ClinicIdFilter;
+use App\Filter\EndDateFilter;
+use App\Filter\StartDateFilter;
+use App\Filter\UserIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FeedbackFormRequest;
 use App\Http\Resources\FeedbackResource;
 use App\Models\Feedback;
 use App\Services\Messages;
 use Illuminate\Http\Request;
+use Illuminate\Pipeline\Pipeline;
 
 class FeedbackController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum', 'check.role:patient,admin'])->except(['index','show']);
+        $this->middleware(['auth:sanctum', 'check.role:admin,doctor,patient'])->only(['index','show']);
+    }
     public function index()
     {
-        $feedbacks = Feedback::all();
+        $data = Feedback::query();
+        $feedbacks = app(Pipeline::class)
+            ->send($data)
+            ->through([
+                ClinicIdFilter::class,
+                UserIdFilter::class,
+                StartDateFilter::class,
+                EndDateFilter::class,
+            ])
+            ->thenReturn()
+            ->get();
         return FeedbackResource::collection($feedbacks);
     }
 

@@ -2,22 +2,40 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Filter\EndDateFilter;
+use App\Filter\LocationFilter;
+use App\Filter\NameFilter;
+use App\Filter\StartDateFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClinicFormRequest;
 use App\Http\Resources\ClinicResource;
-use App\Http\Resources\UserResource;
 use App\Models\Clinic;
 use App\Services\Messages;
 use Illuminate\Http\Request;
+use Illuminate\Pipeline\Pipeline;
 
 class ClinicController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum', 'check.role:admin'])->except(['index', 'show']);
+    }
     public function index()
     {
-        $clinics = Clinic::all();
+        $data = Clinic::query();
+        $clinics = app(Pipeline::class)
+            ->send($data)
+            ->through([
+                NameFilter::class,
+                LocationFilter::class,
+                StartDateFilter::class,
+                EndDateFilter::class,
+            ])
+            ->thenReturn()
+            ->get();
         return ClinicResource::collection($clinics);
     }
 

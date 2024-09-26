@@ -2,21 +2,41 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Filter\EndDateFilter;
+use App\Filter\LastVisitFilter;
+use App\Filter\StartDateFilter;
+use App\Filter\UserIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HistoryFormRequest;
 use App\Http\Resources\HistoryResource;
 use App\Models\History;
 use App\Services\Messages;
 use Illuminate\Http\Request;
+use Illuminate\Pipeline\Pipeline;
 
 class HistoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum', 'check.role:admin,doctor'])->except(['show']);
+        $this->middleware(['auth:sanctum', 'check.role:admin,doctor,patient'])->only('show');
+    }
     public function index()
     {
-        $histories = History::all();
+        $data = History::query();
+        $histories = app(Pipeline::class)
+            ->send($data)
+            ->through([
+                UserIdFilter::class,
+                LastVisitFilter::class,
+                StartDateFilter::class,
+                EndDateFilter::class,
+            ])
+            ->thenReturn()
+            ->get();
         return HistoryResource::collection($histories);
     }
 
@@ -36,7 +56,13 @@ class HistoryController extends Controller
     public function show(string $id)
     {
         $history = History::query()->findOrFail($id);
-        return HistoryResource::make($history);
+        if (request()->user()->tokenCan('admin') || request()->user()->tokenCan('doctor')) {
+            return HistoryResource::make($history);
+        }
+        if (request()->user()->tokenCan('patient') && $history->user_id == request()->user()->id) {
+            return HistoryResource::make($history);
+        }
+        return response()->json(['message' => 'Unauthorized to view this history'], 403);
     }
 
     /**
@@ -44,6 +70,7 @@ class HistoryController extends Controller
      */
     public function update(HistoryFormRequest $request, string $id)
     {
+
         $data = $request->validated();
         $history = History::query()->findOrFail($id);
         $history->update($data);

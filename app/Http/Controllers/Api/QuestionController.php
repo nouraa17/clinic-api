@@ -2,21 +2,40 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Filter\EndDateFilter;
+use App\Filter\StartDateFilter;
+use App\Filter\UserIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\QuestionFormRequest;
 use App\Http\Resources\QuestionResource;
 use App\Models\Question;
 use App\Services\Messages;
 use Illuminate\Http\Request;
+use Illuminate\Pipeline\Pipeline;
 
 class QuestionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum', 'check.role:patient,doctor'])->except(['index','show']);
+        $this->middleware(['auth:sanctum', 'check.role:admin,doctor,patient'])->only(['index','show']);
+    }
     public function index()
     {
-        $questions = Question::all();
+        $data = Question::query();
+        $questions = app(Pipeline::class)
+            ->send($data)
+            ->through([
+                UserIdFilter::class,
+                StartDateFilter::class,
+                EndDateFilter::class,
+            ])
+            ->thenReturn()
+            ->get();
         return QuestionResource::collection($questions);
     }
 

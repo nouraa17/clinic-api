@@ -27,11 +27,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/register', RegisterController::class);
 Route::post('/login', LoginController::class);
-
-Route::resources([
-    'clinics' => ClinicController::class,
-    'reservations' => ReservationController::class,
-    'questions' => QuestionController::class,
-    'feedbacks' => FeedbackController::class,
-    'histories' => HistoryController::class,
-]);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resources([
+        'clinics' => ClinicController::class,
+        'reservations' => ReservationController::class,
+        'questions' => QuestionController::class,
+        'feedbacks' => FeedbackController::class,
+        'histories' => HistoryController::class,
+        ]);
+});
