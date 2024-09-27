@@ -18,4 +18,13 @@ class Reservation extends Model
         'specialization',
         'time'
     ];
+
+    public function clinic()
+    {
+        return $this->belongsTo(Clinic::class, 'clinic_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
 }

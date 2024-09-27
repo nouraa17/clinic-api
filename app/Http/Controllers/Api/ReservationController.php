@@ -29,7 +29,7 @@ class ReservationController extends Controller
     }
     public function index()
     {
-        $data = Reservation::query();
+        $data = Reservation::query()->with(['user','clinic']);
         $reservations = app(Pipeline::class)
             ->send($data)
             ->through([
@@ -60,7 +60,7 @@ class ReservationController extends Controller
      */
     public function show(string $id)
     {
-        $reservation = Reservation::query()->findOrFail($id);
+        $reservation = Reservation::query()->findOrFail($id)->with(['user','clinic']);;
         if (request()->user()->tokenCan('admin') || request()->user()->tokenCan('doctor')) {
             return ReservationResource::make($reservation);
         }

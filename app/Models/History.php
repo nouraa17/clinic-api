@@ -16,4 +16,9 @@ class History extends Model
         'prescriptions',
         'last_visit',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
 }

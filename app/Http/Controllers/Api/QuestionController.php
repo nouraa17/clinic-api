@@ -26,7 +26,7 @@ class QuestionController extends Controller
     }
     public function index()
     {
-        $data = Question::query();
+        $data = Question::query()->with('user');
         $questions = app(Pipeline::class)
             ->send($data)
             ->through([
@@ -54,7 +54,7 @@ class QuestionController extends Controller
      */
     public function show(string $id)
     {
-        $question = Question::query()->findOrFail($id);
+        $question = Question::query()->findOrFail($id)->with('user');
         return QuestionResource::make($question);
     }
 

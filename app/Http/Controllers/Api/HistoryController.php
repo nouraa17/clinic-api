@@ -26,7 +26,7 @@ class HistoryController extends Controller
     }
     public function index()
     {
-        $data = History::query();
+        $data = History::query()->with('user');
         $histories = app(Pipeline::class)
             ->send($data)
             ->through([
@@ -55,7 +55,7 @@ class HistoryController extends Controller
      */
     public function show(string $id)
     {
-        $history = History::query()->findOrFail($id);
+        $history = History::query()->findOrFail($id)->with('user');
         if (request()->user()->tokenCan('admin') || request()->user()->tokenCan('doctor')) {
             return HistoryResource::make($history);
         }

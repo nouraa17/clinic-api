@@ -26,7 +26,7 @@ class FeedbackController extends Controller
     }
     public function index()
     {
-        $data = Feedback::query();
+        $data = Feedback::query()->with(['clinic', 'user']);
         $feedbacks = app(Pipeline::class)
             ->send($data)
             ->through([
@@ -55,7 +55,7 @@ class FeedbackController extends Controller
      */
     public function show(string $id)
     {
-        $feedback = Feedback::query()->findOrFail($id);
+        $feedback = Feedback::query()->findOrFail($id)->with(['user','clinic']);
         return FeedbackResource::make($feedback);
     }
 
