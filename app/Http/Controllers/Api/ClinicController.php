@@ -55,7 +55,7 @@ class ClinicController extends Controller
      */
     public function show(string $id)
     {
-        $clinic = Clinic::query()->findOrFail($id);
+        $clinic = Clinic::query()->where('id', $id)->IfNotFound();
         return ClinicResource::make($clinic);
     }
 
@@ -65,7 +65,7 @@ class ClinicController extends Controller
     public function update(ClinicFormRequest $request, string $id)
     {
         $data = $request->validated();
-        $clinic = Clinic::query()->findOrFail($id);
+        $clinic = Clinic::query()->where('id', $id)->IfNotFound();
         $clinic->update($data);
         return Messages::success(ClinicResource::make($clinic),'Clinic updated successfully');
     }
@@ -75,7 +75,7 @@ class ClinicController extends Controller
      */
     public function destroy(string $id)
     {
-        $clinic = Clinic::query()->findOrFail($id);
+        $clinic = Clinic::query()->where('id', $id)->IfNotFound();
         $clinic->delete();
         return Messages::success(ClinicResource::make($clinic),'Clinic deleted successfully');
     }

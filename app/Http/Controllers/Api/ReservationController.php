@@ -15,6 +15,7 @@ use App\Models\Reservation;
 use App\Services\Messages;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
+use function PHPUnit\Framework\isNull;
 
 class ReservationController extends Controller
 {
@@ -60,14 +61,19 @@ class ReservationController extends Controller
      */
     public function show(string $id)
     {
-        $reservation = Reservation::query()->findOrFail($id)->with(['user','clinic']);;
-        if (request()->user()->tokenCan('admin') || request()->user()->tokenCan('doctor')) {
-            return ReservationResource::make($reservation);
-        }
-        if (request()->user()->tokenCan('patient') && $reservation->user_id == request()->user()->id) {
-            return ReservationResource::make($reservation);
-        }
-        return response()->json(['message' => 'Unauthorized to view this reservation'], 403);
+        $reservation = Reservation::query()->with(['user','clinic'])->where('id',$id)
+            ->when(auth()->user()->type == 'patient' , fn ($e) => $e->where('user_id',auth()->id()))
+            ->IfNotFound();
+        return ReservationResource::make($reservation);
+
+//        return $reservation;
+//        if (request()->user()->tokenCan('admin') || request()->user()->tokenCan('doctor')) {
+//            return ReservationResource::make($reservation);
+//        }
+//        if (request()->user()->tokenCan('patient') && $reservation->user_id == request()->user()->id) {
+//            return ReservationResource::make($reservation);
+//        }
+//        return response()->json(['message' => 'Unauthorized to view this reservation'], 403);
     }
 
     /**
@@ -76,7 +82,7 @@ class ReservationController extends Controller
     public function update(ReservationFormRequest $request, string $id)
     {
         $data = $request->validated();
-        $reservation = Reservation::query()->findOrFail($id);
+        $reservation = Reservation::query()->where('id',$id)->IfNotFound();
         $reservation->update($data);
         return Messages::success(ReservationResource::make($reservation),'Reservation updated successfully');
 
@@ -87,7 +93,7 @@ class ReservationController extends Controller
      */
     public function destroy(string $id)
     {
-        $reservation = Reservation::query()->findOrFail($id);
+        $reservation = Reservation::query()->where('id',$id)->IfNotFound();
         $reservation->delete();
         return Messages::success(ReservationResource::make($reservation),'Reservation deleted successfully');
     }

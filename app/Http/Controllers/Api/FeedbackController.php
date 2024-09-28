@@ -55,7 +55,7 @@ class FeedbackController extends Controller
      */
     public function show(string $id)
     {
-        $feedback = Feedback::query()->findOrFail($id)->with(['user','clinic']);
+        $feedback = Feedback::query()->with(['user','clinic'])->where('id',$id)->IfNotFound();
         return FeedbackResource::make($feedback);
     }
 
@@ -65,7 +65,7 @@ class FeedbackController extends Controller
     public function update(FeedbackFormRequest $request, string $id)
     {
         $data = $request->validated();
-        $feedback = Feedback::query()->findOrFail($id);
+        $feedback = Feedback::query()->where('id',$id)->IfNotFound();
         $feedback->update($data);
         return Messages::success(FeedbackResource::make($feedback),'Feedback updated successfully');
     }
@@ -75,7 +75,7 @@ class FeedbackController extends Controller
      */
     public function destroy(string $id)
     {
-        $feedback = Feedback::query()->findOrFail($id);
+        $feedback = Feedback::query()->where('id',$id)->IfNotFound();
         $feedback->delete();
         return Messages::success(FeedbackResource::make($feedback),'Feedback deleted successfully');
     }

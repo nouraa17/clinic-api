@@ -55,14 +55,18 @@ class HistoryController extends Controller
      */
     public function show(string $id)
     {
-        $history = History::query()->findOrFail($id)->with('user');
-        if (request()->user()->tokenCan('admin') || request()->user()->tokenCan('doctor')) {
-            return HistoryResource::make($history);
-        }
-        if (request()->user()->tokenCan('patient') && $history->user_id == request()->user()->id) {
-            return HistoryResource::make($history);
-        }
-        return response()->json(['message' => 'Unauthorized to view this history'], 403);
+        $history = History::query()->with('user')
+            ->where('id',$id)
+            ->when(auth()->user()->type == 'patient' , fn ($e) => $e->where('user_id',auth()->id()))
+            ->IfNotFound();
+        return HistoryResource::make($history);
+//        if (request()->user()->tokenCan('admin') || request()->user()->tokenCan('doctor')) {
+//            return HistoryResource::make($history);
+//        }
+//        if (request()->user()->tokenCan('patient') && $history->user_id == request()->user()->id) {
+//            return HistoryResource::make($history);
+//        }
+//        return response()->json(['message' => 'Unauthorized to view this history'], 403);
     }
 
     /**
@@ -72,7 +76,7 @@ class HistoryController extends Controller
     {
 
         $data = $request->validated();
-        $history = History::query()->findOrFail($id);
+        $history = History::query()->where('id',$id)->IfNotFound();
         $history->update($data);
         return Messages::success(HistoryResource::make($history),'History updated successfully');
     }
@@ -82,7 +86,7 @@ class HistoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $history = History::query()->findOrFail($id);
+        $history = History::query()->where('id',$id)->IfNotFound();
         $history->delete();
         return Messages::success(HistoryResource::make($history),'History deleted successfully');
     }

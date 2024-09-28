@@ -54,7 +54,7 @@ class QuestionController extends Controller
      */
     public function show(string $id)
     {
-        $question = Question::query()->findOrFail($id)->with('user');
+        $question = Question::query()->with('user')->where('id',$id)->IfNotFound();
         return QuestionResource::make($question);
     }
 
@@ -64,7 +64,7 @@ class QuestionController extends Controller
     public function update(QuestionFormRequest $request, string $id)
     {
         $data = $request->validated();
-        $question = Question::query()->findOrFail($id);
+        $question = Question::query()->where('id',$id)->IfNotFound();
         $question->update($data);
         return Messages::success(QuestionResource::make($question),'Question updated successfully');
     }
@@ -74,7 +74,7 @@ class QuestionController extends Controller
      */
     public function destroy(string $id)
     {
-        $question = Question::query()->findOrFail($id);
+        $question = Question::query()->where('id',$id)->IfNotFound();
         $question->delete();
         return Messages::success(QuestionResource::make($question),'Question deleted successfully');
     }
