@@ -1,0 +1,94 @@
+:root{
+    --success : #03c99d;
+    --primary : #8686e6;
+}
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 255, 255, 0.8)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+.form{
+    max-width: 700px;
+    margin: auto;
+}
+.flex.justify-between.flex-1{
+    display: none;
+}
+svg.w-5.h-5{
+    height: 20px;
+}
+nav.flex.items-center.justify-between{
+    font-size: 13px;
+    text-align: center;
+}
+nav.flex.items-center.justify-between a{
+    text-decoration: none;
+    color: #005f70;
+    font-weight: bold;
+}
+nav.flex.items-center.justify-between span{
+    font-weight: bold;
+}
+body > div > div > nav > div.hidden.sm\:flex-1.sm\:flex.sm\:items-center.sm\:justify-between > div:nth-child(2) > span > span:nth-child(2) > span,
+body > div > div > nav > div.hidden.sm\:flex-1.sm\:flex.sm\:items-center.sm\:justify-between > div:nth-child(2) > span > span:nth-child(3) > span{
+    color: #002732;
+    background-color: #0dcaf0 !important;
+}
+/*#03c99d*/
+/*#8686e6*/
+
+.btn-primary{
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+.btn-success{
+    background-color: var(--success) !important;
+    border-color: var(--success) !important;
+}
+
+.btn-outline-success{
+    color: var(--success) !important;
+    border-color: var(--success) !important;
+}
+.btn-outline-success:hover{
+    color: white !important;
+    background-color: var(--success) !important;
+    border-color: var(--success) !important;
+}
+.btn-outline-primary{
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+.btn-outline-primary:hover{
+    color: white !important;
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+
+
+@media (max-width: 768px) {
+    .welcome-img{
+        height: 200px !important;
+        width: 100% !important;
+    }
+    table a,
+    table button{
+        font-size: 10px !important;
+    }
+    th{
+        font-size: 10px;
+        width: 1ch;
+        padding: 2px !important;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+    td{
+        font-size: 10px;
+        width: 1ch;
+        padding: 2px !important;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+    nav.flex.items-center.justify-between {
+    padding-bottom: 70px;
+    }
+}

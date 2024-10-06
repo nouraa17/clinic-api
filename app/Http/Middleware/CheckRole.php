@@ -16,7 +16,7 @@ class CheckRole
     public function handle(Request $request, Closure $next, ...$roles)
     {
         foreach ($roles as $role) {
-            if ($request->user() && $request->user()->tokenCan($role)) {
+            if ($request->user() && ($request->user()->tokenCan($role) || $request->user()->type==$role)) {
                 return $next($request);
             }
         }

@@ -21,14 +21,23 @@ class ReservationFormRequest extends FormRequest
      */
     public function rules(): array
     {
+        if($this->collect($this->getRequestUri())->contains('api')){
+            return [
+                'clinic_id' => 'required|exists:clinics,id',
+                'user_id' => 'required|exists:users,id',
+                'age' => 'required|integer|between:1,120',
+                'gender' => 'required|in:male,female',
+                'specialization' => 'required',
+                'time' => 'required|date_format:Y-m-d H:i:s',
+            ];
+        }
         return [
             'clinic_id' => 'required|exists:clinics,id',
             'user_id' => 'required|exists:users,id',
             'age' => 'required|integer|between:1,120',
             'gender' => 'required|in:male,female',
             'specialization' => 'required',
-            'time' => 'required|date_format:Y-m-d H:i:s',
-
+            'time' => 'required|date_format:Y-m-d\TH:i',
         ];
     }
 }
