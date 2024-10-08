@@ -3,6 +3,8 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ClinicControllerResource;
+use App\Http\Controllers\FeedbackControllerResource;
+use App\Http\Controllers\HistoryControllerResource;
 use App\Http\Controllers\QuestionControllerResource;
 use App\Http\Controllers\ReservationControllerResource;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +40,8 @@ Route::middleware('auth')->group(function () {
         'clinic'=> ClinicControllerResource::class,
         'reservation'=> ReservationControllerResource::class,
         'question'=> QuestionControllerResource::class,
+        'feedback'=> FeedbackControllerResource::class,
+        'history'=> HistoryControllerResource::class,
     ]);
 });
 

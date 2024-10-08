@@ -11,7 +11,6 @@ use App\Http\Requests\FeedbackFormRequest;
 use App\Http\Resources\FeedbackResource;
 use App\Models\Feedback;
 use App\Services\Messages;
-use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 
 class FeedbackController extends Controller

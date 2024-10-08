@@ -7,10 +7,8 @@ use App\Filter\StartDateFilter;
 use App\Filter\UserIdFilter;
 use App\Http\Requests\QuestionFormRequest;
 use App\Http\Resources\QuestionResource;
-use App\Models\Clinic;
 use App\Models\Question;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 
@@ -34,7 +32,7 @@ class QuestionControllerResource extends Controller
                 EndDateFilter::class,
             ])
             ->thenReturn()
-            ->paginate(1);
+            ->paginate(2);
         $questions=QuestionResource::collection($questions);
 //        $questions = $questions->paginate(10);
 

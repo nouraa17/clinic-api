@@ -21,11 +21,19 @@ class HistoryFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        if($this->collect($this->getRequestUri())->contains('api')){
+            return [
+                'user_id' => 'required|integer|exists:users,id',
+                'chronic_diseases' => 'required',
+                'prescriptions' => 'required',
+                'last_visit' => 'required|date_format:Y-m-d H:i:s',
+            ];
+        }
+            return [
             'user_id' => 'required|integer|exists:users,id',
             'chronic_diseases' => 'required',
             'prescriptions' => 'required',
-            'last_visit' => 'required|date_format:Y-m-d H:i:s',
+            'last_visit' => 'required|date_format:Y-m-d\TH:i',
         ];
     }
 }

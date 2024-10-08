@@ -6,11 +6,8 @@ use App\Filter\AgeFilter;
 use App\Filter\ClinicIdFilter;
 use App\Filter\EndDateFilter;
 use App\Filter\GenderFilter;
-use App\Filter\LocationFilter;
-use App\Filter\NameFilter;
 use App\Filter\StartDateFilter;
 use App\Filter\UserIdFilter;
-use App\Http\Requests\ClinicFormRequest;
 use App\Http\Requests\ReservationFormRequest;
 use App\Http\Resources\ReservationResource;
 use App\Models\Clinic;
@@ -42,7 +39,7 @@ class ReservationControllerResource extends Controller
                 EndDateFilter::class,
             ])
             ->thenReturn()
-            ->paginate(1);
+            ->paginate(2);
         $reservations=ReservationResource::collection($reservations);
 //        $reservations = $reservations->paginate(10);
 

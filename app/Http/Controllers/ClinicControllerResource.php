@@ -33,7 +33,7 @@ class ClinicControllerResource extends Controller
                 EndDateFilter::class,
             ])
             ->thenReturn()
-            ->paginate(3);
+            ->paginate(2);
 
 //        $clinics = $clinics->paginate(10);
         $clinics=ClinicResource::collection($clinics);

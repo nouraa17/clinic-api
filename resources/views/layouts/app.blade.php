@@ -20,15 +20,21 @@
             <div class="collapse navbar-collapse ms-5" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     @auth
-                    <li class="nav-item">
-                        <a class="nav-link" href="/clinic">Clinics</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/reservation">Reservations</a>
-                    </li>
                         <li class="nav-item">
-                        <a class="nav-link" href="/question">Questions</a>
-                    </li>
+                            <a class="nav-link" href="/clinic">Clinics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/reservation">Reservations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/question">Questions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/feedback">Feedbacks</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/history">Histories</a>
+                        </li>
                     @endauth
                 </ul>
                 <ul class="mb-2 mb-lg-0 list-unstyled d-lg-flex">
